@@ -22,9 +22,9 @@ via the aymmetric RSA.
 -- Uses recursion with base cases where either number is a zero
 gcd :: Int -> Int -> Int
 gcd n m
-  | n == 0 = m
-  | m == n = n
-  | m == 0 = n
+  | n == 0    = m
+  | m == n    = n
+  | m == 0    = n
   | otherwise = gcd (mod m n) n
 
 -- Implementation of Euler's totient function
@@ -41,12 +41,12 @@ phi m
 -- number being a zero
 computeCoeffs :: Int -> Int -> (Int, Int)
 computeCoeffs a b
-  | b == 0 = (1, 0)
-  | a == 0 = (0, 1)
+  | b == 0    = (1, 0)
+  | a == 0    = (0, 1)
   | otherwise = (v', (u' - (q * v')))
   where
-      q = fst (quotRem a b)
-      r = snd (quotRem a b)
+      q  = fst (quotRem a b)
+      r  = snd (quotRem a b)
       v' = snd (computeCoeffs b r)
       u' = fst (computeCoeffs b r)
 
@@ -76,7 +76,7 @@ smallestCoPrimeOf a
   where
     smallestCoPrimeOf' a x
       | gcd a x == 1 = x
-      | otherwise = smallestCoPrimeOf' a (x + 1)
+      | otherwise    = smallestCoPrimeOf' a (x + 1)
 
 
 -- Generates keys pairs (public, private) = ((e, n), (d, n))
