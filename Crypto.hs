@@ -18,49 +18,88 @@ via the aymmetric RSA.
 -------------------------------------------------------------------------------
 -- PART 1 : asymmetric encryption
 
+-- Returns the greatest common divisor (or higest common factor) of two numbers
+-- Uses recursion with base cases where either number is a zero
 gcd :: Int -> Int -> Int
-gcd
-  = undefined
+gcd n m
+  | n == 0 = m
+  | m == n = n
+  | m == 0 = n
+  | otherwise = gcd (mod m n) n
 
+-- Implementation of Euler's totient function
+-- Returns the number of co-prime numbers that a given number has
+-- Uses list comprehension and the above gcd function
 phi :: Int -> Int
-phi
-  = undefined
+phi m
+  = length [x | x <- [1..m], gcd m x == 1]
+
 
 -- Calculates (u, v, d) the gcd (d) and Bezout coefficients (u and v)
 -- such that au + bv = d
+-- Uses recursion to find coefficients with base case of either 
+-- number being a zero
 computeCoeffs :: Int -> Int -> (Int, Int)
-computeCoeffs
-  = undefined
+computeCoeffs a b
+  | b == 0 = (1, 0)
+  | a == 0 = (0, 1)
+  | otherwise = (v', (u' - (q * v')))
+  where
+      q = fst (quotRem a b)
+      r = snd (quotRem a b)
+      v' = snd (computeCoeffs b r)
+      u' = fst (computeCoeffs b r)
 
 -- Inverse of a modulo m
+-- Uses the computeCoeffs function and mod function
 inverse :: Int -> Int -> Int
-inverse
-  = undefined
+inverse a m
+  = (fst (computeCoeffs a m)) `mod` m
 
 -- Calculates (a^k mod m)
+-- Uses recursion with the base case being either k == 0 or k == 1
 modPow :: Int -> Int -> Int -> Int
-modPow
-  = undefined
+modPow a k m
+  | k == 0 = 1 `mod` m
+  | k == 1 = a `mod` m
+  | even k = (modPow ((a^2) `mod` m) j m) `mod` m
+  | odd k  = (a * (modPow ((a^2) `mod` m) j m)) `mod` m
+  where
+    j = k `div` 2
 
 -- Returns the smallest integer that is coprime with phi
+-- Uses an auxillary (or helper) function to loop through natural numbers
+-- Uses the gcd function created above
 smallestCoPrimeOf :: Int -> Int
-smallestCoPrimeOf
-  = undefined
+smallestCoPrimeOf a
+  = smallestCoPrimeOf' a 2
+  where
+    smallestCoPrimeOf' a x
+      | gcd a x == 1 = x
+      | otherwise = smallestCoPrimeOf' a (x + 1)
+
 
 -- Generates keys pairs (public, private) = ((e, n), (d, n))
 -- given two "large" distinct primes, p and q
+-- Uses the smallestCoPrimeOf function above
 genKeys :: Int -> Int -> ((Int, Int), (Int, Int))
-genKeys
-  = undefined
+genKeys p q
+  = ((e, n), (d, n))
+  where
+    n = p * q
+    e = smallestCoPrimeOf ((p - 1) * (q - 1))
+    d = inverse e ((p - 1) * (q - 1))
 
 -- RSA encryption/decryption
+-- Uses modPow function, otherwise generates an overflow,
+-- producing incorrect results
 rsaEncrypt :: Int -> (Int, Int) -> Int
-rsaEncrypt
-  = undefined
+rsaEncrypt x (e, n)
+  = modPow x e n
 
 rsaDecrypt :: Int -> (Int, Int) -> Int
-rsaDecrypt
-  = undefined
+rsaDecrypt c (d, n)
+  = modPow c d n
 
 -------------------------------------------------------------------------------
 -- PART 2 : symmetric encryption
