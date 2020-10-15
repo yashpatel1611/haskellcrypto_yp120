@@ -106,18 +106,20 @@ rsaDecrypt c (d, n)
 
 -- Returns position of a letter in the alphabet
 toInt :: Char -> Int
-toInt
-  = undefined
+toInt c
+  = (ord c) - (ord 'a')
 
 -- Returns the n^th letter
 toChar :: Int -> Char
-toChar
-  = undefined
+toChar x
+  = chr (x + ord 'a')
 
 -- "adds" two letters
 add :: Char -> Char -> Char
-add
-  = undefined
+add c1 c2
+  = toChar(mod ((toInt c1) + (toInt c2)) n)
+  where
+    n = (ord 'z') - (ord 'a')
 
 -- "substracts" two letters
 substract :: Char -> Char -> Char
