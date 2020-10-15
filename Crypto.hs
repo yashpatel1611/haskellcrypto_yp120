@@ -117,14 +117,16 @@ toChar x
 -- "adds" two letters
 add :: Char -> Char -> Char
 add c1 c2
-  = toChar(mod ((toInt c1) + (toInt c2)) n)
+  = toChar (mod ((toInt c1) + (toInt c2)) n)
   where
-    n = (ord 'z') - (ord 'a')
+    n = (ord 'z') - (ord 'a') + 1 
 
--- "substracts" two letters
+-- "substracts" two letters (subtract?)
 substract :: Char -> Char -> Char
-substract
-  = undefined
+substract c1 c2
+  = toChar (mod ((toInt c1) - (toInt c2)) n)
+  where
+    n = (ord 'z') - (ord 'a') + 1
 
 -- the next functions present
 -- 2 modes of operation for block ciphers : ECB and CBC
@@ -133,7 +135,7 @@ substract
 -- ecb (electronic codebook) with block size of a letter
 --
 ecbEncrypt :: Char -> String -> String
-ecbEncrypt
+ecbEncrypt k m
   = undefined
 
 ecbDecrypt :: Char -> String -> String
